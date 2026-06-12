@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas Creative | Portal de Clientes</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <section id="auth" class="auth-screen">
+    <div class="auth-glow"></div>
+    <article class="auth-card">
+      <div class="brand big"><img class="brand-logo" src="atlas-logo.png" alt="Atlas Creative logo"></div>
+      <p class="eyebrow">PORTAL PRIVADO</p>
+      <h1>Acceso de clientes</h1>
+      <p class="muted">Regístrate con correo y contraseña. Tu correo quedará obligatorio en tu perfil y Atlas recibirá el aviso por Discord si hay webhook configurado.</p>
+      <div class="tabs"><button id="tabLogin" class="active">Entrar</button><button id="tabRegister">Registrarme</button></div>
+      <form id="loginForm" class="auth-form show">
+        <label>Usuario o correo<input id="loginUser" autocomplete="username" placeholder="Ej: cliente_demo o correo@email.com" required></label>
+        <label>Contraseña<input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••" required></label>
+        <button>Entrar al portal</button>
+      </form>
+      <form id="registerForm" class="auth-form">
+        <label>Nombre visible<input id="regName" placeholder="Ej: Juan Pérez" required></label>
+        <label>Correo obligatorio<input id="regEmail" type="email" autocomplete="email" placeholder="tu@email.com" required></label>
+        <label>Usuario<input id="regUser" autocomplete="username" placeholder="Ej: juan_web" required></label>
+        <label>Contraseña<input id="regPass" type="password" autocomplete="new-password" placeholder="Mínimo 4 caracteres" required></label>
+        <button>Crear cuenta</button>
+      </form>
+      <p id="authMsg" class="auth-msg"></p>
+    </article>
+  </section>
+
+  <section id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><img src="atlas-logo.png" alt="Atlas Creative"></div>
+      <nav>
+        <a class="nav active" data-page="inicio">⌂ <span>Inicio</span></a>
+        <a class="nav" data-page="proyectos">▦ <span>Proyectos</span><b id="navProjects">0</b></a>
+        <a class="nav" data-page="mensajes">✉ <span>Mensajes</span><b id="navMessages">0</b></a>
+        <a class="nav" data-page="facturacion">▤ <span>Facturación</span><b id="navInvoices">0</b></a>
+        <a class="nav" data-page="archivos">▣ <span>Archivos</span><b id="navFiles">0</b></a>
+        <a class="nav" data-page="soporte">◌ <span>Soporte</span><b id="navTickets">0</b></a>
+        <a class="nav" data-page="configuracion">⚙ <span>Configuración</span></a>
+      </nav>
+      <div class="help"><div class="miniIcon">?</div><h4>¿Necesitas ayuda?</h4><p>Solicita una web, cambio o soporte. Todo quedará guardado solo en tu cuenta.</p><button data-page="soporte" class="go">Abrir soporte →</button></div>
+      <div class="user"><div class="avatar" id="avatar">C</div><div><strong id="sideName">Cliente</strong><span id="sideUser">usuario</span></div><small>⌄</small></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><button id="menu">☰</button><div></div><button class="bell">♢</button><button class="profile" id="topName">Cliente⌄</button><button id="logout" class="logout">Salir</button></header>
+
+      <section id="inicio" class="page show">
+        <div class="hero"><p>ÁREA DE CLIENTES</p><h1>Bienvenido, <span id="heroName">Cliente</span> 👋</h1><span>Aquí puedes ver el estado de tus proyectos, mensajes, facturas y archivos.</span><em id="today"></em></div>
+        <div class="stats four">
+          <article><i>▣</i><p>PROYECTOS ACTIVOS</p><h2 id="statProjects">0</h2><a data-page="proyectos">Ver proyectos →</a></article>
+          <article><i class="green">◎</i><p>PROGRESO PROMEDIO</p><h2 id="statProgress">0%</h2><a data-page="proyectos">Ver detalles →</a></article>
+          <article><i class="purple">✉</i><p>MENSAJES</p><h2 id="statMessages">0</h2><a data-page="mensajes">Ver mensajes →</a></article>
+          <article><i class="gold">▤</i><p>FACTURAS</p><h2 id="statInvoices">0</h2><a data-page="facturacion">Ver facturación →</a></article>
+        </div>
+        <div id="homeEmpty" class="empty big-empty"><h2>Tu portal está vacío por ahora.</h2><p>Cuando pidas una web, abras un ticket o Atlas Creative te suba archivos, aparecerá aquí solo para tu cuenta.</p><button data-page="soporte">Solicitar mi primer proyecto</button></div>
+        <article id="activeProjectCard" class="project-card hidden"></article>
+        <div class="grid3">
+          <article class="card"><h3>Checklist del proyecto</h3><ul id="homeChecklist" class="check"></ul><p class="muted small">Aparecerá cuando tengas un proyecto activo.</p></article>
+          <article class="card"><h3>Actividad reciente</h3><div id="homeActivity" class="activity"></div></article>
+          <article class="card"><h3>Archivos recientes</h3><div id="homeFiles" class="files"></div></article>
+        </div>
+      </section>
+
+      <section id="proyectos" class="page"><div class="title"><p>PROYECTOS</p><h1>Tus proyectos.</h1><span class="muted">Solo se muestran proyectos asociados a tu usuario.</span></div><div id="projectsList" class="projects"></div><div id="projectsEmpty" class="empty"><h2>No tienes proyectos todavía.</h2><p>Solicita una web desde soporte y aparecerá aquí como proyecto pendiente.</p><button data-page="soporte">Solicitar proyecto</button></div></section>
+
+      <section id="mensajes" class="page"><div class="title"><p>MENSAJES</p><h1>Comunicación con el equipo.</h1></div><div id="messagesList" class="messages-list"></div><div id="messagesEmpty" class="empty"><h2>No tienes mensajes.</h2><p>Cuando Atlas Creative te responda, los mensajes aparecerán aquí.</p></div><form id="messageForm" class="composer"><textarea id="messageText" placeholder="Escribe un mensaje para Atlas Creative..."></textarea><button>Enviar mensaje</button></form></section>
+
+      <section id="facturacion" class="page"><div class="title"><p>FACTURACIÓN</p><h1>Facturas y pagos.</h1></div><div id="invoiceTable" class="table"></div><div id="invoiceEmpty" class="empty"><h2>No tienes facturas.</h2><p>Cuando se genere una factura para tu proyecto, la verás aquí.</p></div></section>
+
+      <section id="archivos" class="page"><div class="title"><p>ARCHIVOS</p><h1>Documentos de tus proyectos.</h1></div>
+        <article class="upload-card"><h3>Subir archivo</h3><p class="muted">Puedes subir cualquier tipo de archivo. Solo lo verás tú y la cuenta admin de Atlas Creative.</p><form id="fileUploadForm"><select id="fileOwnerSelect" class="hidden"></select><input id="fileInput" type="file" required><button>Subir archivo</button></form></article>
+        <div id="fileGrid" class="filegrid"></div><div id="fileEmpty" class="empty"><h2>No tienes archivos.</h2><p>Las propuestas, guías, entregas y facturas aparecerán aquí cuando se suban a tu cuenta.</p></div></section>
+
+      <section id="soporte" class="page"><div class="title"><p>SOPORTE</p><h1>Solicitudes y tickets.</h1></div><div class="support">
+        <article><h3>Pedir web o cambio</h3><form id="requestForm"><input id="requestTitle" placeholder="Título: web para restaurante, cambio de textos..." required><select id="requestType"><option>Nuevo proyecto</option><option>Cambio en mi web</option><option>Soporte técnico</option><option>Factura o pago</option></select><textarea id="requestDescription" placeholder="Explícanos qué necesitas" required></textarea><button>Enviar solicitud</button></form></article>
+        <article><h3>Tus tickets</h3><div id="ticketsList"></div><div id="ticketsEmpty" class="empty mini"><p>No tienes tickets abiertos.</p></div></article>
+      </div></section>
+
+      <section id="configuracion" class="page"><div class="title"><p>CONFIGURACIÓN</p><h1>Ajustes de cuenta.</h1></div><form id="settingsForm" class="settings"><label>Nombre visible<input id="setName"></label><label>Usuario<input id="setUser" disabled></label><label>Email obligatorio<input id="setEmail" type="email" placeholder="tuemail@ejemplo.com" required></label><label>Empresa opcional<input id="setCompany" placeholder="Nombre de tu empresa"></label><button>Guardar cambios</button></form>
+        <article id="adminAuditSettings" class="admin-audit hidden">
+          <div class="title small-title"><p>ADMIN</p><h2>Auditoría y Discord webhook.</h2><span class="muted">Cada acción importante se guarda en el registro y, si pones un webhook, llega también a Discord.</span></div>
+          <form id="webhookForm" class="webhook-form"><label>Webhook de Discord<input id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." autocomplete="off"></label><button>Guardar webhook</button><button type="button" id="testWebhook">Probar webhook</button></form>
+          <div class="audit-top"><h3>Registro de auditoría</h3><button type="button" id="clearAudit" class="danger small-btn">Vaciar registro local</button></div>
+          <div id="auditList" class="audit-list"></div>
+        </article>
+      </section>
+    </main>
+  </section>
+</body>
+</html>
